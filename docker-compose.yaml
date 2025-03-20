@@ -1,8 +1,8 @@
-version: '3.8'
-
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     depends_on:
@@ -16,7 +16,10 @@ services:
       - app_network
     
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    command: npm run dev
     ports:
       - "3000:3000"
     depends_on:
@@ -28,27 +31,27 @@ services:
     networks:
       - app_network
 
-    redis:
-      image: redis:7.2-alpine
-      container_name: redis
-      ports:
-        - "6379:6379"
-      networks:
-        - app_network
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
 
-      postgres:
-        image: postgres:15-alpine
-        container_name: postgres_db
-        ports:
-          - "5432:5432"
-        environment:
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: feature_flags
-        volumes:
-          - postgres_data:/var/lib/postgresql/data
-        networks:
-          - app_network
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: feature_flags
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
 
 networks:
   app_network:
