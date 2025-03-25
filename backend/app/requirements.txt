@@ -5,3 +5,5 @@ redis==5.0.1
 asyncpg==0.28.0
 databases==0.8.0
 pydantic==2.4.2
+psycopg2-binary==2.9.9
+alembic==1.12.1
